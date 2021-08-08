@@ -3,7 +3,7 @@ $host = 'localhost';
 $user = 'root';
 $password = 'root';
 $db_name = 'test';
-
+session_start();
 $link = mysqli_connect($host, $user, $password, $db_name);
 mysqli_query($link, "SET NAMES 'utf8'");
 if ($_GET['del'] != NULL) {
@@ -65,7 +65,14 @@ function input($type, $name)
         function querySorting($elem)
         {
           global $query;
-          $query = "SELECT * FROM table_old WHERE id>0 ORDER BY $elem DESC";
+          if ($_SESSION['sorting'] == $elem) {
+            $desk = "";
+            $_SESSION['sorting'] = NULL;
+          } else {
+            $desk = "DESC";
+            $_SESSION['sorting'] = $elem;
+          }
+          $query = "SELECT * FROM table_old WHERE id>0 ORDER BY $elem $desk";
         }
         switch ($_GET['sorting']) {
           case 'id':
